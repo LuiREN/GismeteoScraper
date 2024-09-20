@@ -72,4 +72,19 @@ def save_to_csv(data, filename):
         writer.writerows(data)
 
 if __name__ == "__main__":
-    print("Скрипт для сбора данных о погоде в Самаре")
+    print("Добро пожаловать в программу сбора данных о погоде в Самаре!")
+    start_date = get_user_input_date("Введите начальную дату (ММ.ГГГГ): ")
+    end_date = get_user_input_date("Введите конечную дату (ММ.ГГГГ): ")
+
+    if start_date > end_date:
+        print("Ошибка: начальная дата не может быть позже конечной даты.")
+    else:
+        print(f"Начинаем сбор данных о погоде в Самаре с {start_date.strftime('%m.%Y')} по {end_date.strftime('%m.%Y')}...")
+        weather_data = scrape_weather_history(start_date, end_date)
+
+        if weather_data:
+            filename = f'samara_weather_{start_date.strftime("%Y%m")}-{end_date.strftime("%Y%m")}.csv'
+            save_to_csv(weather_data, filename)
+            print(f"Данные сохранены в файл {filename}")
+        else:
+            print("Не удалось получить данные о погоде.")
