@@ -3,6 +3,14 @@ from bs4 import BeautifulSoup
 import csv
 from datetime import datetime, timedelta
 
+# Словарь для расшифровки облачности
+CLOUDINESS = {
+    'sun.png': 'Ясно',
+    'sunc.png': 'Малооблачно',
+    'suncl.png': 'Переменная облачность',
+    'dull.png': 'Пасмурно'
+}
+
 def get_weather_data(year, month):
     """Получает данные о погоде за указанный месяц и год."""
     url = f"https://www.gismeteo.ru/diary/4618/{year}/{month:02d}/"
