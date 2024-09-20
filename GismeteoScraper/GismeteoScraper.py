@@ -15,8 +15,36 @@ def get_weather_data(year, month):
         print(f"Ошибка при запросе URL {url}: {e}")
         return []
     
-    # код для парсинга HTML
-    return []
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    table = soup.find('table', attrs={
+        "align": "center",
+        "valign": "top",
+        "border": "0"
+    })
+
+    if not table:
+        print(f"Таблица с данными не найдена на странице {url}")
+        return []
+
+    data = []
+    rows = table.find_all('tr')[2:]  # Пропускаем две строки заголовков
+    for row in rows:
+        cols = row.find_all('td')
+        if len(cols) >= 11:
+            date = f"{year}-{month:02d}-{cols[0].text.strip()}"
+            temp_day = cols[1].text.strip()
+            pressure_day = cols[2].text.strip()
+            wind_day = cols[5].text.strip().split('\n')[-1]
+            temp_evening = cols[6].text.strip()
+            pressure_evening = cols[7].text.strip()
+            wind_evening = cols[10].text.strip().split('\n')[-1]
+            data.append([
+                date, temp_day, pressure_day, wind_day,
+                temp_evening, pressure_evening, wind_evening
+            ])
+
+    return data
 
 if __name__ == "__main__":
     print("Скрипт для сбора данных о погоде в Самаре")
