@@ -61,6 +61,15 @@ def scrape_weather_history(start_date, end_date):
         current_date = current_date.replace(day=1)
     return all_data
 
+def save_to_csv(data, filename):
+    """Сохраняет данные в CSV файл."""
+    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow([
+            'Дата', 'Температура (день)', 'Давление (день)', 'Облачность (день)', 'Ветер (день)',
+            'Температура (вечер)', 'Давление (вечер)', 'Облачность (вечер)', 'Ветер (вечер)'
+        ])
+        writer.writerows(data)
 
 if __name__ == "__main__":
     print("Скрипт для сбора данных о погоде в Самаре")
