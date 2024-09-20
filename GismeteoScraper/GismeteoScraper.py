@@ -54,6 +54,23 @@ def get_weather_data(year, month):
 
     return data
 
+def get_cloudiness(cell):
+    """Извлекает информацию об облачности из ячейки таблицы."""
+    img = cell.find('img', class_='screen_icon')
+    if img and 'src' in img.attrs:
+        src = img['src'].split('/')[-1]
+        return CLOUDINESS.get(src, 'Неизвестно')
+    return 'Нет данных'
+
+def get_user_input_date(prompt):
+    """Запрашивает у пользователя ввод даты."""
+    while True:
+        date_input = input(prompt)
+        try:
+            return datetime.strptime(date_input, "%m.%Y")
+        except ValueError:
+            print("Некорректный формат даты. Пожалуйста, используйте формат ММ.ГГГГ (например, 01.2001)")
+
 
 def scrape_weather_history(start_date, end_date):
     """Собирает исторические данные о погоде за указанный период."""
