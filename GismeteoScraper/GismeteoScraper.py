@@ -46,5 +46,21 @@ def get_weather_data(year, month):
 
     return data
 
+
+def scrape_weather_history(start_date, end_date):
+    """Собирает исторические данные о погоде за указанный период."""
+    all_data = []
+    current_date = start_date
+    while current_date <= end_date:
+        year = current_date.year
+        month = current_date.month
+        print(f"Получение данных за {month:02d}.{year}")
+        month_data = get_weather_data(year, month)
+        all_data.extend(month_data)
+        current_date += timedelta(days=32)
+        current_date = current_date.replace(day=1)
+    return all_data
+
+
 if __name__ == "__main__":
     print("Скрипт для сбора данных о погоде в Самаре")
