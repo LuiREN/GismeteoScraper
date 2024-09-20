@@ -15,14 +15,14 @@ def get_weather_data(year, month):
     """Получает данные о погоде за указанный месяц и год."""
     url = f"https://www.gismeteo.ru/diary/4618/{year}/{month:02d}/"
     headers = {"User-Agent": "Mozilla/5.0"}
-    
+
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
     except requests.RequestException as e:
         print(f"Ошибка при запросе URL {url}: {e}")
         return []
-    
+
     soup = BeautifulSoup(response.content, 'html.parser')
 
     table = soup.find('table', attrs={
@@ -43,13 +43,15 @@ def get_weather_data(year, month):
             date = f"{year}-{month:02d}-{cols[0].text.strip()}"
             temp_day = cols[1].text.strip()
             pressure_day = cols[2].text.strip()
+            cloudiness_day = get_cloudiness(cols[3])
             wind_day = cols[5].text.strip().split('\n')[-1]
             temp_evening = cols[6].text.strip()
             pressure_evening = cols[7].text.strip()
+            cloudiness_evening = get_cloudiness(cols[8])
             wind_evening = cols[10].text.strip().split('\n')[-1]
             data.append([
-                date, temp_day, pressure_day, wind_day,
-                temp_evening, pressure_evening, wind_evening
+                date, temp_day, pressure_day, cloudiness_day, wind_day,
+                temp_evening, pressure_evening, cloudiness_evening, wind_evening
             ])
 
     return data
@@ -70,7 +72,6 @@ def get_user_input_date(prompt):
             return datetime.strptime(date_input, "%m.%Y")
         except ValueError:
             print("Некорректный формат даты. Пожалуйста, используйте формат ММ.ГГГГ (например, 01.2001)")
-
 
 def scrape_weather_history(start_date, end_date):
     """Собирает исторические данные о погоде за указанный период."""
