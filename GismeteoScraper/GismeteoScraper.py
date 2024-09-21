@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
+import os
 from datetime import datetime, timedelta
 
 # Словарь для расшифровки облачности
@@ -137,13 +138,21 @@ def scrape_weather_history(start_date, end_date):
 
 def save_to_csv(data, filename):
     """
-    Сохраняет данные в CSV файл.
+    Сохраняет данные в CSV файл в папке 'dataset'.
     
     Args:
         data (list): Список данных для сохранения
         filename (str): Имя файла для сохранения
     """
-    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+    # Создаем папку 'dataset', если она не существует
+    dataset_folder = 'dataset'
+    if not os.path.exists(dataset_folder):
+        os.makedirs(dataset_folder)
+    
+    # Формируем полный путь к файлу
+    filepath = os.path.join(dataset_folder, filename)
+    
+    with open(filepath, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         # Записываем заголовок CSV файла
         writer.writerow([
@@ -169,8 +178,8 @@ if __name__ == "__main__":
         if weather_data:
             # Формируем имя файла на основе дат
             filename = f'samara_weather_{start_date.strftime("%Y%m")}-{end_date.strftime("%Y%m")}.csv'
-            # Сохраняем данные в CSV файл
+            # Сохраняем данные в CSV файл в папке 'dataset'
             save_to_csv(weather_data, filename)
-            print(f"Данные сохранены в файл {filename}")
+            print(f"Данные сохранены в файл dataset/{filename}")
         else:
             print("Не удалось получить данные о погоде.")
