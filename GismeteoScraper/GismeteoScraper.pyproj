@@ -33,6 +33,7 @@
     <InterpreterReference Include="Global|PythonCore|3.11" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Dockerfile" />
     <Content Include="README.md" />
     <Content Include="requirements.txt" />
   </ItemGroup>
